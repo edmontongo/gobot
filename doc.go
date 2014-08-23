@@ -17,7 +17,7 @@ Basic Setup
       "fmt"
       "time"
 
-      "github.com/hybridgroup/gobot"
+      "github.com/edmontongo/gobot"
     )
 
     func main() {
@@ -41,8 +41,8 @@ Web Enabled? You bet!
     import (
     	"fmt"
 
-    	"github.com/hybridgroup/gobot"
-    	"github.com/hybridgroup/gobot/api"
+    	"github.com/edmontongo/gobot"
+    	"github.com/edmontongo/gobot/api"
     )
 
     func main() {
@@ -73,9 +73,9 @@ Blinking teh LED (Hello Eve!)
     import (
     	"time"
 
-    	"github.com/hybridgroup/gobot"
-    	"github.com/hybridgroup/gobot/platforms/firmata"
-    	"github.com/hybridgroup/gobot/platforms/gpio"
+    	"github.com/edmontongo/gobot"
+    	"github.com/edmontongo/gobot/platforms/firmata"
+    	"github.com/edmontongo/gobot/platforms/gpio"
     )
 
     func main() {

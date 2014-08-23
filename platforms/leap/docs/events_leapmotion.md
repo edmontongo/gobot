@@ -167,4 +167,4 @@ Gets triggered with every motion detected, makes frame input available.
 
 Gets triggered when receiving a message.
 
-More information abour the parser [https://github.com/hybridgroup/gobot-leapmotion/blob/master/parser.go](https://github.com/hybridgroup/gobot-leapmotion/blob/master/parser.go).
+More information abour the parser [https://github.com/edmontongo/gobot-leapmotion/blob/master/parser.go](https://github.com/edmontongo/gobot-leapmotion/blob/master/parser.go).

@@ -3,7 +3,7 @@ package spark
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/hybridgroup/gobot"
+	"github.com/edmontongo/gobot"
 	"io/ioutil"
 	"net/http"
 	"net/url"

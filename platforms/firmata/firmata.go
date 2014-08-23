@@ -7,7 +7,7 @@ import (
 	"math"
 	"time"
 
-	"github.com/hybridgroup/gobot"
+	"github.com/edmontongo/gobot"
 )
 
 const (

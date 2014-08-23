@@ -10,8 +10,8 @@ import (
 	"strings"
 
 	"github.com/bmizerany/pat"
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/api/robeaux"
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/api/robeaux"
 )
 
 // Optional restful API through Gobot has access

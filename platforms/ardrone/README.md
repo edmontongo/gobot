@@ -3,13 +3,13 @@
 This package  provides the Gobot adaptor and driver for the [Parrot Ardrone](http://ardrone2.parrot.com).
 
 For more information about Gobot, check out the github repo at
-https://github.com/hybridgroup/gobot
+https://github.com/edmontongo/gobot
 
 ## Getting Started
 
 ## Installing
 ```
-go get github.com/hybridgroup/gobot && go install github.com/hybridgroup/gobot/platforms/ardrone
+go get github.com/edmontongo/gobot && go install github.com/edmontongo/gobot/platforms/ardrone
 ```
 ## Using
 ```go
@@ -18,8 +18,8 @@ package main
 import (
 	"time"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/ardrone"
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/platforms/ardrone"
 )
 
 func main() {

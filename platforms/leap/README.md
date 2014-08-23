@@ -8,7 +8,7 @@ First install the [Leap Motion Software](https://www.leapmotion.com/setup)
 
 Now you can install the package with
 ```
-go get github.com/hybridgroup/gobot && go install github.com/hybridgroup/gobot/platforms/leap
+go get github.com/edmontongo/gobot && go install github.com/edmontongo/gobot/platforms/leap
 ```
 
 ## Example
@@ -19,8 +19,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/leap"
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/platforms/leap"
 )
 
 func main() {

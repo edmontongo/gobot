@@ -3,7 +3,7 @@ package leap
 import (
 	"code.google.com/p/go.net/websocket"
 	"fmt"
-	"github.com/hybridgroup/gobot"
+	"github.com/edmontongo/gobot"
 )
 
 type LeapMotionAdaptor struct {

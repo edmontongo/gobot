@@ -5,10 +5,10 @@ Gobot (http://gobot.io/) is a framework for robotics and physical computing usin
 This repository contains the Gobot adaptor and driver for mavlink.
 
 For more information about Gobot, check out the github repo at
-https://github.com/hybridgroup/gobot
+https://github.com/edmontongo/gobot
 
 ## Installing
-`go get github.com/hybridgroup/gobot && go install github.com/hybridgroup/gobot/platforms/mavlink`
+`go get github.com/edmontongo/gobot && go install github.com/edmontongo/gobot/platforms/mavlink`
 
 ## Using
 ```go
@@ -17,9 +17,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/mavlink"
-	common "github.com/hybridgroup/gobot/platforms/mavlink/common"
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/platforms/mavlink"
+	common "github.com/edmontongo/gobot/platforms/mavlink/common"
 )
 
 func main() {

@@ -3,7 +3,7 @@ package i2c
 import (
 	"fmt"
 
-	"github.com/hybridgroup/gobot"
+	"github.com/edmontongo/gobot"
 )
 
 type WiichuckDriver struct {

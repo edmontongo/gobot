@@ -1,9 +1,9 @@
 package main
 
 import (
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/platforms/opencv"
 	cv "github.com/hybridgroup/go-opencv/opencv"
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/opencv"
 )
 
 func main() {

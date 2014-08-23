@@ -115,7 +115,7 @@ func adaptor() string {
 	return `package {{ .Name }}
 
 import (
-  "github.com/hybridgroup/gobot"
+  "github.com/edmontongo/gobot"
 )
 
 type {{ .UpperName }}Adaptor struct {
@@ -145,7 +145,7 @@ func driver() string {
 	return `package {{ .Name }}
 
 import (
-  "github.com/hybridgroup/gobot"
+  "github.com/edmontongo/gobot"
 )
 
 type {{ .UpperName }}Driver struct {
@@ -178,7 +178,7 @@ func driverTest() string {
 	return `package {{ .Name }}
 
 import (
-  "github.com/hybridgroup/gobot"
+  "github.com/edmontongo/gobot"
   "testing"
 )
 
@@ -202,7 +202,7 @@ func adaptorTest() string {
 	return `package {{ .Name }}
 
 import (
-  "github.com/hybridgroup/gobot"
+  "github.com/edmontongo/gobot"
   "testing"
 )
 
@@ -230,7 +230,7 @@ Gobot (http://gobot.io/) is a framework for robotics and physical computing usin
 This repository contains the Gobot adaptor and driver for {{ .Name }}.
 
 For more information about Gobot, check out the github repo at
-https://github.com/hybridgroup/gobot
+https://github.com/edmontongo/gobot
 
 ## Installing
 

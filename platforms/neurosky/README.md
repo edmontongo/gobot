@@ -4,7 +4,7 @@ This package contains the Gobot adaptor and driver for the [Neurosky Mindwave Mo
 
 ## Installing
 ```
-go get github.com/hybridgroup/gobot && go install github.com/hybridgroup/gobot/platforms/neurosky
+go get github.com/edmontongo/gobot && go install github.com/edmontongo/gobot/platforms/neurosky
 ```
 
 ## How To Connect
@@ -46,8 +46,8 @@ You should be able to pair your Mindwave using your normal system tray applet fo
 import (
 	"fmt"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/neurosky"
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/platforms/neurosky"
 )
 
 func main() {

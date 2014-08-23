@@ -6,7 +6,7 @@ This package provides the Gobot adaptor for the [Beaglebone Black](http://beagle
 
 ## Installing
 ```
-go get github.com/hybridgroup/gobot && go install github.com/hybridgroup/platforms/gobot/beaglebone
+go get github.com/edmontongo/gobot && go install github.com/hybridgroup/platforms/gobot/beaglebone
 ```
 
 ## Cross compiling for the Beaglebone Black
@@ -36,9 +36,9 @@ package main
 import (
 	"time"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/beaglebone"
-	"github.com/hybridgroup/gobot/platforms/gpio"
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/platforms/beaglebone"
+	"github.com/edmontongo/gobot/platforms/gpio"
 )
 
 func main() {

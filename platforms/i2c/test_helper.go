@@ -1,6 +1,6 @@
 package i2c
 
-import "github.com/hybridgroup/gobot"
+import "github.com/edmontongo/gobot"
 
 type i2cTestAdaptor struct {
 	gobot.Adaptor

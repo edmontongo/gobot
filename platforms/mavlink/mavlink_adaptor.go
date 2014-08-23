@@ -3,7 +3,7 @@ package mavlink
 import (
 	"io"
 
-	"github.com/hybridgroup/gobot"
+	"github.com/edmontongo/gobot"
 	"github.com/tarm/goserial"
 )
 

@@ -1,6 +1,6 @@
 package gpio
 
-import "github.com/hybridgroup/gobot"
+import "github.com/edmontongo/gobot"
 
 type gpioTestAdaptor struct {
 	gobot.Adaptor

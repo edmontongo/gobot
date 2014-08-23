@@ -1,7 +1,7 @@
 package i2c
 
 import (
-	"github.com/hybridgroup/gobot"
+	"github.com/edmontongo/gobot"
 )
 
 type HMC6352Driver struct {

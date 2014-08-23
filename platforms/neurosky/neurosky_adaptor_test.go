@@ -3,7 +3,7 @@ package neurosky
 import (
 	"testing"
 
-	"github.com/hybridgroup/gobot"
+	"github.com/edmontongo/gobot"
 )
 
 func initTestNeuroskyAdaptor() *NeuroskyAdaptor {

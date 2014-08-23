@@ -5,7 +5,7 @@ This package provides the adaptor for microcontrollers such as Arduino that supp
 ## Getting Started
 
 ```
-go get github.com/hybridgroup/gobot && go install github.com/hybridgroup/gobot/platforms/firmata
+go get github.com/edmontongo/gobot && go install github.com/edmontongo/gobot/platforms/firmata
 ```
 
 ## Example
@@ -16,9 +16,9 @@ package main
 import (
 	"time"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/firmata"
-	"github.com/hybridgroup/gobot/platforms/gpio"
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/platforms/firmata"
+	"github.com/edmontongo/gobot/platforms/gpio"
 )
 
 func main() {

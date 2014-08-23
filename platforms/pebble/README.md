@@ -9,12 +9,12 @@ and that the "watchbot" app (https://github.com/hybridgroup/watchbot)
 has been installed on the Pebble watch.
 
 For more information about Gobot, check out the github repo at
-https://github.com/hybridgroup/gobot
+https://github.com/edmontongo/gobot
 
 
 ## Installing
 
-* Install running: ```go get github.com/hybridgroup/gobot-pebble``
+* Install running: ```go get github.com/edmontongo/gobot-pebble``
 * Install Pebble 2.0 iOS or Android app. (If you haven't already)
 * Follow README to install and configure "watchbot" on your watch: https://github.com/hybridgroup/watchbot
 
@@ -30,9 +30,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/api"
-	"github.com/hybridgroup/gobot/platforms/pebble"
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/api"
+	"github.com/edmontongo/gobot/platforms/pebble"
 )
 
 func main() {

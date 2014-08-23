@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/beaglebone"
-	"github.com/hybridgroup/gobot/platforms/i2c"
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/platforms/beaglebone"
+	"github.com/edmontongo/gobot/platforms/i2c"
 )
 
 func main() {

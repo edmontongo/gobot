@@ -1,8 +1,8 @@
 package opencv
 
 import (
+	"github.com/edmontongo/gobot"
 	cv "github.com/hybridgroup/go-opencv/opencv"
-	"github.com/hybridgroup/gobot"
 )
 
 type WindowDriver struct {

@@ -3,7 +3,7 @@ package gpio
 import (
 	"strconv"
 
-	"github.com/hybridgroup/gobot"
+	"github.com/edmontongo/gobot"
 )
 
 type DirectPinDriver struct {

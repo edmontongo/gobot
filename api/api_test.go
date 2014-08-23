@@ -9,7 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/hybridgroup/gobot"
+	"github.com/edmontongo/gobot"
 )
 
 func initTestAPI() *api {

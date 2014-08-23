@@ -3,7 +3,7 @@ package joystick
 import (
 	"testing"
 
-	"github.com/hybridgroup/gobot"
+	"github.com/edmontongo/gobot"
 )
 
 func initTestJoystickAdaptor() *JoystickAdaptor {

@@ -1,8 +1,8 @@
 package ardrone
 
 import (
+	"github.com/edmontongo/gobot"
 	client "github.com/hybridgroup/go-ardrone/client"
-	"github.com/hybridgroup/gobot"
 )
 
 type drone interface {

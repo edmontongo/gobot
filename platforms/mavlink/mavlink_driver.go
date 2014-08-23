@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hybridgroup/gobot"
-	common "github.com/hybridgroup/gobot/platforms/mavlink/common"
+	"github.com/edmontongo/gobot"
+	common "github.com/edmontongo/gobot/platforms/mavlink/common"
 )
 
 type MavlinkDriver struct {

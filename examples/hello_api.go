@@ -5,8 +5,8 @@ import (
 	"html"
 	"net/http"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/api"
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/api"
 )
 
 func main() {

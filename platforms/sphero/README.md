@@ -4,7 +4,7 @@ This package provides the Gobot adaptor and driver for the [Sphero](http://www.g
 
 ## Installing
 ```
-go get github.com/hybridgroup/gobot && go install github.com/hybridgroup/gobot/platforms/sphero
+go get github.com/edmontongo/gobot && go install github.com/edmontongo/gobot/platforms/sphero
 ```
 
 ## How To Connect
@@ -47,8 +47,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/sphero"
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/platforms/sphero"
 )
 
 func main() {

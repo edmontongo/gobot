@@ -3,9 +3,9 @@ package main
 import (
 	"time"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/digispark"
-	"github.com/hybridgroup/gobot/platforms/gpio"
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/platforms/digispark"
+	"github.com/edmontongo/gobot/platforms/gpio"
 )
 
 func main() {

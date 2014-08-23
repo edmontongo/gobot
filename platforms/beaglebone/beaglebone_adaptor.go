@@ -3,7 +3,7 @@ package beaglebone
 import (
 	"bufio"
 	"fmt"
-	"github.com/hybridgroup/gobot"
+	"github.com/edmontongo/gobot"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -13,7 +13,7 @@ import (
 const (
 	Slots       = "/sys/devices/bone_capemgr.*"
 	Ocp         = "/sys/devices/ocp.*"
- 	I2CLocation = "/dev/i2c-1"
+	I2CLocation = "/dev/i2c-1"
 )
 
 var pins = map[string]int{

@@ -1,7 +1,7 @@
 package beaglebone
 
 import (
-	"github.com/hybridgroup/gobot"
+	"github.com/edmontongo/gobot"
 	"testing"
 )
 

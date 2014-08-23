@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/mavlink"
-	common "github.com/hybridgroup/gobot/platforms/mavlink/common"
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/platforms/mavlink"
+	common "github.com/edmontongo/gobot/platforms/mavlink/common"
 )
 
 func main() {

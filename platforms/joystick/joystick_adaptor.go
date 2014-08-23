@@ -1,8 +1,8 @@
 package joystick
 
 import (
+	"github.com/edmontongo/gobot"
 	"github.com/hybridgroup/go-sdl2/sdl"
-	"github.com/hybridgroup/gobot"
 )
 
 type joystick interface {

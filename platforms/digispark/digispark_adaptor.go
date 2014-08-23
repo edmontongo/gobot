@@ -1,7 +1,7 @@
 package digispark
 
 import (
-	"github.com/hybridgroup/gobot"
+	"github.com/edmontongo/gobot"
 	"strconv"
 )
 

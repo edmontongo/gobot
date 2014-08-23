@@ -1,7 +1,7 @@
 package gpio
 
 import (
-	"github.com/hybridgroup/gobot"
+	"github.com/edmontongo/gobot"
 )
 
 type MakeyButtonDriver struct {

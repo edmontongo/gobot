@@ -5,8 +5,8 @@ import (
 	"runtime"
 	"testing"
 
+	"github.com/edmontongo/gobot"
 	cv "github.com/hybridgroup/go-opencv/opencv"
-	"github.com/hybridgroup/gobot"
 )
 
 func TestUtils(t *testing.T) {

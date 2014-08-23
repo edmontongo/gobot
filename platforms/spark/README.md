@@ -4,7 +4,7 @@ This package provides the Gobot adaptor for the [Spark Core](https://www.spark.i
 
 ## Installing
 ```
-go get github.com/hybridgroup/gobot && go install github.com/hybridgroup/gobot/platforms/spark
+go get github.com/edmontongo/gobot && go install github.com/edmontongo/gobot/platforms/spark
 ```
 
 ## Example
@@ -15,9 +15,9 @@ package main
 import (
 	"time"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/gpio"
-	"github.com/hybridgroup/gobot/platforms/spark"
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/platforms/gpio"
+	"github.com/edmontongo/gobot/platforms/spark"
 )
 
 func main() {

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"code.google.com/p/go.net/websocket"
-	"github.com/hybridgroup/gobot"
+	"github.com/edmontongo/gobot"
 )
 
 type LeapMotionDriver struct {

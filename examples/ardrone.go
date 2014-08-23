@@ -3,8 +3,8 @@ package main
 import (
 	"time"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/ardrone"
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/platforms/ardrone"
 )
 
 func main() {

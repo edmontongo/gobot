@@ -1,4 +1,4 @@
-[![Gobot](https://cdn.rawgit.com/hybridgroup/gobot-site/master/source/images/elements/gophy.png)](http://gobot.io/)
+[![Gobot](https://cdn.rawgit.com/edmontongo/gobot-site/master/source/images/elements/gophy.png)](http://gobot.io/)
 
 http://gobot.io/
 
@@ -8,7 +8,7 @@ It provides a simple, yet powerful way to create solutions that incorporate mult
 
 Want to use Ruby or Javascript on robots? Check out our sister projects Artoo (http://artoo.io) and Cylon.js (http://cylonjs.com/)
 
-[![Build Status](https://travis-ci.org/hybridgroup/gobot.png?branch=master)](https://travis-ci.org/hybridgroup/gobot) [![Coverage Status](https://coveralls.io/repos/hybridgroup/gobot/badge.png?branch=master)](https://coveralls.io/r/hybridgroup/gobot?branch=master)
+[![Build Status](https://travis-ci.org/edmontongo/gobot.png?branch=master)](https://travis-ci.org/edmontongo/gobot) [![Coverage Status](https://coveralls.io/repos/edmontongo/gobot/badge.png?branch=master)](https://coveralls.io/r/edmontongo/gobot?branch=master)
 
 ## Examples
 
@@ -20,9 +20,9 @@ package main
 import (
 	"time"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/firmata"
-	"github.com/hybridgroup/gobot/platforms/gpio"
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/platforms/firmata"
+	"github.com/edmontongo/gobot/platforms/gpio"
 )
 
 func main() {
@@ -58,8 +58,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/sphero"
+	"github.com/edmontongo/gobot"
+	"github.com/edmontongo/gobot/platforms/sphero"
 )
 
 func main() {
@@ -89,22 +89,22 @@ func main() {
 ## Hardware Support
 Gobot has a extensible system for connecting to hardware devices. The following robotics and physical computing platforms are currently supported:
   
-  - [Ardrone](http://ardrone2.parrot.com/) <=> [Library](https://github.com/hybridgroup/gobot/tree/master/platforms/ardrone)
-  - [Arduino](http://www.arduino.cc/) <=> [Library](https://github.com/hybridgroup/gobot/tree/master/platforms/firmata)
-  - [Beaglebone Black](http://beagleboard.org/Products/BeagleBone+Black/) <=> [Library](https://github.com/hybridgroup/gobot/tree/master/platforms/beaglebone)
-  - [Digispark](http://digistump.com/products/1) <=> [Library](https://github.com/hybridgroup/gobot/tree/master/platforms/digispark)
-  - [Joystick](http://en.wikipedia.org/wiki/Joystick) <=> [Library](https://github.com/hybridgroup/gobot/tree/master/platforms/joystick)
-  - [Leap Motion](https://www.leapmotion.com/) <=> [Library](https://github.com/hybridgroup/gobot/tree/master/platforms/leapmotion)
-  - [Neurosky](http://neurosky.com/products-markets/eeg-biosensors/hardware/) <=> [Library](https://github.com/hybridgroup/gobot/tree/master/platforms/neurosky)
-  - [OpenCV](http://opencv.org/) <=> [Library](https://github.com/hybridgroup/gobot/tree/master/platforms/opencv)
-  - [Spark](https://www.spark.io/) <=> [Library](https://github.com/hybridgroup/gobot/tree/master/platforms/spark)
-  - [Sphero](http://www.gosphero.com/) <=> [Library](https://github.com/hybridgroup/gobot/tree/master/platforms/sphero)
+  - [Ardrone](http://ardrone2.parrot.com/) <=> [Library](https://github.com/edmontongo/gobot/tree/master/platforms/ardrone)
+  - [Arduino](http://www.arduino.cc/) <=> [Library](https://github.com/edmontongo/gobot/tree/master/platforms/firmata)
+  - [Beaglebone Black](http://beagleboard.org/Products/BeagleBone+Black/) <=> [Library](https://github.com/edmontongo/gobot/tree/master/platforms/beaglebone)
+  - [Digispark](http://digistump.com/products/1) <=> [Library](https://github.com/edmontongo/gobot/tree/master/platforms/digispark)
+  - [Joystick](http://en.wikipedia.org/wiki/Joystick) <=> [Library](https://github.com/edmontongo/gobot/tree/master/platforms/joystick)
+  - [Leap Motion](https://www.leapmotion.com/) <=> [Library](https://github.com/edmontongo/gobot/tree/master/platforms/leapmotion)
+  - [Neurosky](http://neurosky.com/products-markets/eeg-biosensors/hardware/) <=> [Library](https://github.com/edmontongo/gobot/tree/master/platforms/neurosky)
+  - [OpenCV](http://opencv.org/) <=> [Library](https://github.com/edmontongo/gobot/tree/master/platforms/opencv)
+  - [Spark](https://www.spark.io/) <=> [Library](https://github.com/edmontongo/gobot/tree/master/platforms/spark)
+  - [Sphero](http://www.gosphero.com/) <=> [Library](https://github.com/edmontongo/gobot/tree/master/platforms/sphero)
   
 
 Support for many devices that use General Purpose Input/Output (GPIO) have
 a shared set of drivers provided using the cylon-gpio module:
 
-  - [GPIO](https://en.wikipedia.org/wiki/General_Purpose_Input/Output) <=> [Drivers](https://github.com/hybridgroup/gobot/tree/master/platforms/gpio)
+  - [GPIO](https://en.wikipedia.org/wiki/General_Purpose_Input/Output) <=> [Drivers](https://github.com/edmontongo/gobot/tree/master/platforms/gpio)
     - Analog Sensor
     - Button
     - Digital Sensor
@@ -116,7 +116,7 @@ a shared set of drivers provided using the cylon-gpio module:
 Support for devices that use Inter-Integrated Circuit (I2C) have a shared set of
 drivers provided using the gobot-i2c module:
 
-  - [I2C](https://en.wikipedia.org/wiki/I%C2%B2C) <=> [Drivers](https://github.com/hybridgroup/gobot/tree/master/platforms/i2c)
+  - [I2C](https://en.wikipedia.org/wiki/I%C2%B2C) <=> [Drivers](https://github.com/edmontongo/gobot/tree/master/platforms/i2c)
     - BlinkM
     - HMC6352
     - Wii Nunchuck Controller
@@ -125,13 +125,13 @@ More platforms and drivers are coming soon...
 
 ## Getting Started
 
-Install Gobot with: `go get -u github.com/hybridgroup/gobot`
+Install Gobot with: `go get -u github.com/edmontongo/gobot`
 
 ## API:
 
 Gobot includes a RESTful API to query the status of any robot running within a group, including the connection and device status, and execute device commands.
 
-To activate the API, require the `github.com/hybridgroup/gobot/api` package and instantiate the `API` like this:
+To activate the API, require the `github.com/edmontongo/gobot/api` package and instantiate the `API` like this:
 
 ```go 
   gbot := gobot.NewGobot()
