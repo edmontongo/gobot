@@ -1,28 +1,41 @@
 package opencv
 
 import (
-	"github.com/hybridgroup/gobot"
+	"path"
+	"runtime"
 	"testing"
+
+	cv "github.com/hybridgroup/go-opencv/opencv"
+	"github.com/hybridgroup/gobot"
 )
 
 func initTestWindowDriver() *WindowDriver {
-	return NewWindowDriver("bot")
+	d := NewWindowDriver("bot")
+	d.start = func(w *WindowDriver) {
+		w.window = &testWindow{}
+	}
+	return d
 }
 
 func TestWindowDriverStart(t *testing.T) {
-	t.SkipNow()
 	d := initTestWindowDriver()
-	gobot.Expect(t, d.Start(), true)
+	gobot.Assert(t, d.Start(), true)
 }
 
 func TestWindowDriverHalt(t *testing.T) {
-	t.SkipNow()
 	d := initTestWindowDriver()
-	gobot.Expect(t, d.Halt(), true)
+	gobot.Assert(t, d.Halt(), true)
 }
 
 func TestWindowDriverInit(t *testing.T) {
-	t.SkipNow()
 	d := initTestWindowDriver()
-	gobot.Expect(t, d.Init(), true)
+	gobot.Assert(t, d.Init(), true)
+}
+
+func TestWindowDriverShowImage(t *testing.T) {
+	d := initTestWindowDriver()
+	_, currentfile, _, _ := runtime.Caller(0)
+	image := cv.LoadImage(path.Join(path.Dir(currentfile), "lena-256x256.jpg"))
+	d.Start()
+	d.ShowImage(image)
 }

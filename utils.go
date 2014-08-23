@@ -1,8 +1,9 @@
 package gobot
 
 import (
+	"crypto/rand"
 	"math"
-	"math/rand"
+	"math/big"
 	"time"
 )
 
@@ -31,12 +32,16 @@ func Publish(e *Event, val interface{}) {
 }
 
 func On(e *Event, f func(s interface{})) {
-	e.Callbacks = append(e.Callbacks, f)
+	e.Callbacks = append(e.Callbacks, callback{f, false})
+}
+
+func Once(e *Event, f func(s interface{})) {
+	e.Callbacks = append(e.Callbacks, callback{f, true})
 }
 
 func Rand(max int) int {
-	r := rand.New(rand.NewSource(time.Now().UTC().UnixNano()))
-	return r.Intn(max)
+	i, _ := rand.Int(rand.Reader, big.NewInt(int64(max)))
+	return int(i.Int64())
 }
 
 func FromScale(input, min, max float64) float64 {

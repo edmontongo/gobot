@@ -7,7 +7,6 @@ import (
 
 type JSONConnection struct {
 	Name    string `json:"name"`
-	Port    string `json:"port"`
 	Adaptor string `json:"adaptor"`
 }
 
@@ -43,7 +42,7 @@ func (c *connections) Start() error {
 	return err
 }
 
-// Filanize() finalizes all the connections.
+// Finalize() finalizes all the connections.
 func (c *connections) Finalize() {
 	for _, connection := range *c {
 		connection.Finalize()

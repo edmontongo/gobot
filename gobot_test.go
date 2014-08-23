@@ -12,9 +12,9 @@ func initTestGobot() *Gobot {
 	g.trap = func(c chan os.Signal) {
 		c <- os.Interrupt
 	}
-	g.AddRobot(NewTestRobot("Robot 1"))
-	g.AddRobot(NewTestRobot("Robot 2"))
-	g.AddRobot(NewTestRobot("Robot 3"))
+	g.AddRobot(NewTestRobot("Robot1"))
+	g.AddRobot(NewTestRobot("Robot2"))
+	g.AddRobot(NewTestRobot("Robot3"))
 	return g
 }
 
@@ -25,13 +25,13 @@ func TestGobotStart(t *testing.T) {
 
 func TestGobotRobot(t *testing.T) {
 	g := initTestGobot()
-	Expect(t, g.Robot("Robot 1").Name, "Robot 1")
-	Expect(t, g.Robot("Robot 4"), (*Robot)(nil))
-	Expect(t, g.Robot("Robot 1").Device("Device 4"), (Device)(nil))
-	Expect(t, g.Robot("Robot 1").Device("Device 1").Name(), "Device 1")
-	Expect(t, g.Robot("Robot 1").Devices().Len(), 3)
-	Expect(t, g.Robot("Robot 1").Connection("Connection 4"), (Connection)(nil))
-	Expect(t, g.Robot("Robot 1").Connections().Len(), 3)
+	Assert(t, g.Robot("Robot1").Name, "Robot1")
+	Assert(t, g.Robot("Robot4"), (*Robot)(nil))
+	Assert(t, g.Robot("Robot1").Device("Device4"), (Device)(nil))
+	Assert(t, g.Robot("Robot1").Device("Device1").Name(), "Device1")
+	Assert(t, g.Robot("Robot1").Devices().Len(), 3)
+	Assert(t, g.Robot("Robot1").Connection("Connection4"), (Connection)(nil))
+	Assert(t, g.Robot("Robot1").Connections().Len(), 3)
 }
 
 func TestGobotToJSON(t *testing.T) {
@@ -40,6 +40,6 @@ func TestGobotToJSON(t *testing.T) {
 		return nil
 	})
 	json := g.ToJSON()
-	Expect(t, len(json.Robots), g.Robots().Len())
-	Expect(t, len(json.Commands), len(g.Commands()))
+	Assert(t, len(json.Robots), g.Robots().Len())
+	Assert(t, len(json.Commands), len(g.Commands()))
 }

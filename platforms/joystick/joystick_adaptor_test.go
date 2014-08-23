@@ -1,22 +1,26 @@
 package joystick
 
 import (
-	"github.com/hybridgroup/gobot"
 	"testing"
+
+	"github.com/hybridgroup/gobot"
 )
 
 func initTestJoystickAdaptor() *JoystickAdaptor {
-	return NewJoystickAdaptor("bot")
+	a := NewJoystickAdaptor("bot")
+	a.connect = func(j *JoystickAdaptor) {
+		j.joystick = &testJoystick{}
+	}
+	return a
 }
 
 func TestJoystickAdaptorConnect(t *testing.T) {
-	t.SkipNow()
 	a := initTestJoystickAdaptor()
-	gobot.Expect(t, a.Connect(), true)
+	gobot.Assert(t, a.Connect(), true)
 }
 
 func TestJoystickAdaptorFinalize(t *testing.T) {
-	t.SkipNow()
 	a := initTestJoystickAdaptor()
-	gobot.Expect(t, a.Finalize(), true)
+	a.Connect()
+	gobot.Assert(t, a.Finalize(), true)
 }

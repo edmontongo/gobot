@@ -9,12 +9,22 @@ import (
 	"time"
 )
 
-func Expect(t *testing.T, a interface{}, b interface{}) {
+func logFailure(t *testing.T, message string) {
+	_, file, line, _ := runtime.Caller(2)
+	s := strings.Split(file, "/")
+	t.Errorf("%v:%v: %v", s[len(s)-1], line, message)
+}
+func Assert(t *testing.T, a interface{}, b interface{}) {
 	if !reflect.DeepEqual(a, b) {
-		_, file, line, _ := runtime.Caller(1)
-		s := strings.Split(file, "/")
-		t.Errorf("%v:%v Got %v - type %v, Expected %v - type %v",
-			s[len(s)-1], line, a, reflect.TypeOf(a), b, reflect.TypeOf(b))
+		logFailure(t, fmt.Sprintf("%v - \"%v\", should equal,  %v - \"%v\"",
+			a, reflect.TypeOf(a), b, reflect.TypeOf(b)))
+	}
+}
+
+func Refute(t *testing.T, a interface{}, b interface{}) {
+	if reflect.DeepEqual(a, b) {
+		logFailure(t, fmt.Sprintf("%v - \"%v\", should not equal,  %v - \"%v\"",
+			a, reflect.TypeOf(a), b, reflect.TypeOf(b)))
 	}
 }
 
@@ -93,20 +103,16 @@ func NewTestAdaptor(name string) *testAdaptor {
 			name,
 			"TestAdaptor",
 			"/dev/null",
-			map[string]interface{}{
-				"param1": "1",
-				"param2": 2,
-			},
 		),
 	}
 }
 
 func NewTestRobot(name string) *Robot {
-	adaptor1 := NewTestAdaptor("Connection 1")
-	adaptor2 := NewTestAdaptor("Connection 2")
+	adaptor1 := NewTestAdaptor("Connection1")
+	adaptor2 := NewTestAdaptor("Connection2")
 	adaptor3 := NewTestAdaptor("")
-	driver1 := NewTestDriver("Device 1", adaptor1)
-	driver2 := NewTestDriver("Device 2", adaptor2)
+	driver1 := NewTestDriver("Device1", adaptor1)
+	driver2 := NewTestDriver("Device2", adaptor2)
 	driver3 := NewTestDriver("", adaptor3)
 	work := func() {}
 	r := NewRobot(name,
@@ -120,4 +126,50 @@ func NewTestRobot(name string) *Robot {
 		return fmt.Sprintf("hey %v, %v", robot, message)
 	})
 	return r
+}
+
+type loopbackAdaptor struct {
+	Adaptor
+}
+
+func (t *loopbackAdaptor) Finalize() bool { return true }
+func (t *loopbackAdaptor) Connect() bool  { return true }
+
+func NewLoopbackAdaptor(name string) *loopbackAdaptor {
+	return &loopbackAdaptor{
+		Adaptor: *NewAdaptor(
+			name,
+			"Loopback",
+		),
+	}
+}
+
+type pingDriver struct {
+	Driver
+}
+
+func (t *pingDriver) Start() bool { return true }
+func (t *pingDriver) Halt() bool  { return true }
+
+func NewPingDriver(adaptor *loopbackAdaptor, name string) *pingDriver {
+	t := &pingDriver{
+		Driver: *NewDriver(
+			name,
+			"Ping",
+			adaptor,
+		),
+	}
+
+	t.AddEvent("ping")
+
+	t.AddCommand("ping", func(params map[string]interface{}) interface{} {
+		return t.Ping()
+	})
+
+	return t
+}
+
+func (t *pingDriver) Ping() string {
+	Publish(t.Event("ping"), "ping")
+	return "pong"
 }
