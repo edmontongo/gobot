@@ -1,9 +1,11 @@
 package sphero
 
 import (
+	"io"
+	"log"
+
 	"github.com/edmontongo/gobot"
 	"github.com/tarm/goserial"
-	"io"
 )
 
 type SpheroAdaptor struct {
@@ -23,7 +25,7 @@ func NewSpheroAdaptor(name string, port string) *SpheroAdaptor {
 			c := &serial.Config{Name: a.Port(), Baud: 115200}
 			s, err := serial.OpenPort(c)
 			if err != nil {
-				panic(err)
+				log.Fatal(err)
 			}
 			a.sp = s
 		},
