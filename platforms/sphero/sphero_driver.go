@@ -37,6 +37,18 @@ type Collision struct {
 	Timestamp uint32
 }
 
+
+type Locator struct {
+	// did 02
+	// dlen x0b
+ 	// XPOS, YPOS, XVEL, YVEL, SOG
+        Xpos, Ypos, Xvel, Yvel, SOG int16
+}
+
+const LocatorMask2  uint32 = 0x0C000000
+const AccelOneMask2 uint32 = 0x02000000
+const VelocityMask2 unit32 = 0x01800000
+
 func NewSpheroDriver(a *SpheroAdaptor, name string) *SpheroDriver {
 	s := &SpheroDriver{
 		Driver: *gobot.NewDriver(
@@ -49,6 +61,7 @@ func NewSpheroDriver(a *SpheroAdaptor, name string) *SpheroDriver {
 	}
 
 	s.AddEvent("collision")
+	s.AddEvent("locator")
 	s.AddCommand("SetRGB", func(params map[string]interface{}) interface{} {
 		r := uint8(params["r"].(float64))
 		g := uint8(params["g"].(float64))
@@ -141,6 +154,10 @@ func (s *SpheroDriver) Start() bool {
 				if evt[2] == 0x07 {
 					s.handleCollisionDetected(evt)
 				}
+				if evt[2] == 0x02 {
+					s.handleLocator(evt)
+				}
+
 			}
 			time.Sleep(100 * time.Millisecond)
 		}
@@ -204,6 +221,33 @@ func (s *SpheroDriver) ConfigureCollisionDetectionRaw(xThreshold, xSpeed, yThres
 	s.packetChannel <- s.craftPacket([]uint8{0x01, xThreshold, xSpeed, yThreshold, ySpeed, deadTime}, 0x02, 0x12)
 }
 
+//
+//DID,CID,SEQ,DLEN,N,M,MASK,PCNT,MASK2
+//x02,x11,8bit,0eh,16bit,16bit,32bit,8bit,32bit
+
+func (s *SpheroDriver) ConfigureDataStreaming(seq uint8, n, m uint16, mask uint32, pcnt uint8, mask2 unit32) {
+	// Meth 0x01 to enable, 0x00 to disable
+	s.packetChannel <- s.craftPacket([]uint8{seq, 0x0e, 
+		uint8(n >> 8), uint8(n & 0xFF),
+		uint8(m >> 8), uint8(m & 0xFF),
+		uint8(mask >> 24 & 0xFF), uint8(mask >> 16 & 0xFF),
+		uint8(mask >> 8 & 0xFF), uint8(mask & 0xFF),
+		pcnt,
+		uint8(mask2 >> 24 & 0xFF), uint8(mask2 >> 16 & 0xFF),
+		uint8(mask2 >> 8 & 0xFF), uint8(mask2 & 0xFF)},
+		0x02, //DID
+		0x11)  //CID
+}
+
+// 2 is good!
+func (s *SpheroDriver) ConfigureLocatorStreaming(updatesPerSecond int) { 
+	mask2 := ( LocatorMask2 | AccelOneMask2 | VelocityMask2 )
+	updates := 400 / updatesPerSecond
+	s.ConfigureDataStreaming(0x01, updates, 1, 0, 0, mask2)
+}
+
+
+
 func (s *SpheroDriver) configureDefaultCollisionDetection() {
 	s.ConfigureCollisionDetectionRaw(0x40, 0x40, 0x50, 0x50, 0x60)
 }
@@ -227,6 +271,21 @@ func (s *SpheroDriver) handleCollisionDetected(data []uint8) {
 	}
 	gobot.Publish(s.Event("collision"), data)
 }
+
+func (s *SpheroDriver) handleLocator(data []uint8) {
+	// 22 = 5 byte async header + 16 bytes of data + 1 byte checksum
+	checksum := data[len(data)-1]
+	if checksum == calculateChecksum(data[2:len(data)-1]) {
+		// SOP+SOP+ID+DLEN+DLEN
+		buffer := bytes.NewBuffer(data[5:])		
+		var locator Locator
+		binary.Read(buffer, binary.BigEndian, &locator)
+		gobot.Publish(s.Event("locator"), locator)
+		return
+	}
+}
+
+
 
 func (s *SpheroDriver) getSyncResponse(packet *packet) []byte {
 	s.packetChannel <- packet
