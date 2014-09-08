@@ -5,7 +5,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"time"
-
+        "log"
 	"github.com/edmontongo/gobot"
 )
 
@@ -37,17 +37,18 @@ type Collision struct {
 	Timestamp uint32
 }
 
-
+// OK this is sorta bad because it is hardcoded
+// response of all 3 masks
 type Locator struct {
 	// did 02
 	// dlen x0b
  	// XPOS, YPOS, XVEL, YVEL, SOG
-        Xpos, Ypos, Xvel, Yvel, SOG int16
+        Xpos, Ypos, Accel, Xvel, Yvel int16
 }
 
 const LocatorMask2  uint32 = 0x0C000000
 const AccelOneMask2 uint32 = 0x02000000
-const VelocityMask2 unit32 = 0x01800000
+const VelocityMask2 uint32 = 0x01800000
 
 func NewSpheroDriver(a *SpheroAdaptor, name string) *SpheroDriver {
 	s := &SpheroDriver{
@@ -153,10 +154,12 @@ func (s *SpheroDriver) Start() bool {
 				evt, s.asyncResponse = s.asyncResponse[len(s.asyncResponse)-1], s.asyncResponse[:len(s.asyncResponse)-1]
 				if evt[2] == 0x07 {
 					s.handleCollisionDetected(evt)
-				}
-				if evt[2] == 0x02 {
+				} else if evt[2] == 0x03 {
 					s.handleLocator(evt)
+				} else {
+					log.Printf("Async: %v\n", evt[2])
 				}
+
 
 			}
 			time.Sleep(100 * time.Millisecond)
@@ -221,29 +224,32 @@ func (s *SpheroDriver) ConfigureCollisionDetectionRaw(xThreshold, xSpeed, yThres
 	s.packetChannel <- s.craftPacket([]uint8{0x01, xThreshold, xSpeed, yThreshold, ySpeed, deadTime}, 0x02, 0x12)
 }
 
-//
+// See http://orbotixinc.github.io/Sphero-Docs/docs/sphero-api/bootloader-and-sphero.html
 //DID,CID,SEQ,DLEN,N,M,MASK,PCNT,MASK2
 //x02,x11,8bit,0eh,16bit,16bit,32bit,8bit,32bit
-
-func (s *SpheroDriver) ConfigureDataStreaming(seq uint8, n, m uint16, mask uint32, pcnt uint8, mask2 unit32) {
+//        ff fc 02 11 23 0e 00 c8 00 01 00 00 00 00 00 0f 80 00 00 c8 
+func (s *SpheroDriver) ConfigureDataStreaming(seq uint8, n, m uint16, mask uint32, pcnt uint8, mask2 uint32) {
 	// Meth 0x01 to enable, 0x00 to disable
-	s.packetChannel <- s.craftPacket([]uint8{seq, 0x0e, 
-		uint8(n >> 8), uint8(n & 0xFF),
-		uint8(m >> 8), uint8(m & 0xFF),
+	s.packetChannel <- s.specialCraftPacket([]uint8{ //seq, 0x0e, 
+		uint8(n >> 8 & 0xFF), uint8(n & 0xFF),
+		uint8(m >> 8 & 0xFF), uint8(m & 0xFF),
 		uint8(mask >> 24 & 0xFF), uint8(mask >> 16 & 0xFF),
 		uint8(mask >> 8 & 0xFF), uint8(mask & 0xFF),
 		pcnt,
 		uint8(mask2 >> 24 & 0xFF), uint8(mask2 >> 16 & 0xFF),
 		uint8(mask2 >> 8 & 0xFF), uint8(mask2 & 0xFF)},
+		0xFC,
 		0x02, //DID
 		0x11)  //CID
 }
 
-// 2 is good!
+// 2 is good for updates per second
 func (s *SpheroDriver) ConfigureLocatorStreaming(updatesPerSecond int) { 
 	mask2 := ( LocatorMask2 | AccelOneMask2 | VelocityMask2 )
-	updates := 400 / updatesPerSecond
-	s.ConfigureDataStreaming(0x01, updates, 1, 0, 0, mask2)
+	//mask2 := uint32(0xaa800000)
+	updates := uint16(400 / updatesPerSecond)
+	log.Printf("Sending Data Streaming %v Mask2\n", mask2)
+	s.ConfigureDataStreaming(0xAB, updates, 1, 0, 0, mask2)
 }
 
 
@@ -282,6 +288,8 @@ func (s *SpheroDriver) handleLocator(data []uint8) {
 		binary.Read(buffer, binary.BigEndian, &locator)
 		gobot.Publish(s.Event("locator"), locator)
 		return
+	} else {
+		log.Printf("handleLocator failed to parse %v\n", data)
 	}
 }
 
@@ -303,6 +311,16 @@ func (s *SpheroDriver) getSyncResponse(packet *packet) []byte {
 	return []byte{}
 }
 
+
+func (s *SpheroDriver) specialCraftPacket(body []uint8, sop2 byte, did byte, cid byte) *packet {
+	packet := new(packet)
+	packet.body = body
+	dlen := len(packet.body) + 1
+	packet.header = []uint8{0xFF, sop2, did, cid, s.seq, uint8(dlen)}
+	packet.checksum = s.calculateChecksum(packet)
+	return packet
+}
+
 func (s *SpheroDriver) craftPacket(body []uint8, did byte, cid byte) *packet {
 	packet := new(packet)
 	packet.body = body
@@ -311,6 +329,8 @@ func (s *SpheroDriver) craftPacket(body []uint8, did byte, cid byte) *packet {
 	packet.checksum = s.calculateChecksum(packet)
 	return packet
 }
+
+
 
 func (s *SpheroDriver) write(packet *packet) {
 	buf := append(packet.header, packet.body...)
