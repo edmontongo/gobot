@@ -5,7 +5,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"time"
-
+        "log"
 	"github.com/edmontongo/gobot"
 )
 
@@ -37,6 +37,19 @@ type Collision struct {
 	Timestamp uint32
 }
 
+// OK this is sorta bad because it is hardcoded
+// response of all 3 masks
+type Locator struct {
+	// did 02
+	// dlen x0b
+ 	// XPOS, YPOS, XVEL, YVEL, SOG
+        Xpos, Ypos, Accel, Xvel, Yvel int16
+}
+
+const LocatorMask2  uint32 = 0x0C000000
+const AccelOneMask2 uint32 = 0x02000000
+const VelocityMask2 uint32 = 0x01800000
+
 func NewSpheroDriver(a *SpheroAdaptor, name string) *SpheroDriver {
 	s := &SpheroDriver{
 		Driver: *gobot.NewDriver(
@@ -49,6 +62,7 @@ func NewSpheroDriver(a *SpheroAdaptor, name string) *SpheroDriver {
 	}
 
 	s.AddEvent("collision")
+	s.AddEvent("locator")
 	s.AddCommand("SetRGB", func(params map[string]interface{}) interface{} {
 		r := uint8(params["r"].(float64))
 		g := uint8(params["g"].(float64))
@@ -119,11 +133,14 @@ func (s *SpheroDriver) Start() bool {
 	go func() {
 		for {
 			header := s.readHeader()
-			// log.Printf("header: %x\n", header)
+			/* if header[2] == 0x7 {
+				log.Printf("header: %x\n", header)
+			} */
+
 			if header != nil && len(header) != 0 {
 				body := s.readBody(header[4])
-				// log.Printf("body: %x\n", body)
 				if header[1] == 0xFE {
+					//log.Printf("body: %x\n", body)
 					async := append(header, body...)
 					s.asyncResponse = append(s.asyncResponse, async)
 				} else {
@@ -140,7 +157,13 @@ func (s *SpheroDriver) Start() bool {
 				evt, s.asyncResponse = s.asyncResponse[len(s.asyncResponse)-1], s.asyncResponse[:len(s.asyncResponse)-1]
 				if evt[2] == 0x07 {
 					s.handleCollisionDetected(evt)
+				} else if evt[2] == 0x03 {
+					s.handleLocator(evt)
+				} else {
+					log.Printf("Async: %v\n", evt[2])
 				}
+
+
 			}
 			time.Sleep(100 * time.Millisecond)
 		}
@@ -204,6 +227,36 @@ func (s *SpheroDriver) ConfigureCollisionDetectionRaw(xThreshold, xSpeed, yThres
 	s.packetChannel <- s.craftPacket([]uint8{0x01, xThreshold, xSpeed, yThreshold, ySpeed, deadTime}, 0x02, 0x12)
 }
 
+// See http://orbotixinc.github.io/Sphero-Docs/docs/sphero-api/bootloader-and-sphero.html
+//DID,CID,SEQ,DLEN,N,M,MASK,PCNT,MASK2
+//x02,x11,8bit,0eh,16bit,16bit,32bit,8bit,32bit
+//        ff fc 02 11 23 0e 00 c8 00 01 00 00 00 00 00 0f 80 00 00 c8 
+func (s *SpheroDriver) ConfigureDataStreaming(seq uint8, n, m uint16, mask uint32, pcnt uint8, mask2 uint32) {
+	// Meth 0x01 to enable, 0x00 to disable
+	s.packetChannel <- s.specialCraftPacket([]uint8{ //seq, 0x0e, 
+		uint8(n >> 8 & 0xFF), uint8(n & 0xFF),
+		uint8(m >> 8 & 0xFF), uint8(m & 0xFF),
+		uint8(mask >> 24 & 0xFF), uint8(mask >> 16 & 0xFF),
+		uint8(mask >> 8 & 0xFF), uint8(mask & 0xFF),
+		pcnt,
+		uint8(mask2 >> 24 & 0xFF), uint8(mask2 >> 16 & 0xFF),
+		uint8(mask2 >> 8 & 0xFF), uint8(mask2 & 0xFF)},
+		0xFC,
+		0x02, //DID
+		0x11)  //CID
+}
+
+// 2 is good for updates per second
+func (s *SpheroDriver) ConfigureLocatorStreaming(updatesPerSecond int) { 
+	mask2 := ( LocatorMask2 | AccelOneMask2 | VelocityMask2 )
+	//mask2 := uint32(0xaa800000)
+	updates := uint16(400 / updatesPerSecond)
+	log.Printf("Sending Data Streaming %v Mask2\n", mask2)
+	s.ConfigureDataStreaming(0xAB, updates, 1, 0, 0, mask2)
+}
+
+
+
 func (s *SpheroDriver) configureDefaultCollisionDetection() {
 	s.ConfigureCollisionDetectionRaw(0x40, 0x40, 0x50, 0x50, 0x60)
 }
@@ -225,8 +278,26 @@ func (s *SpheroDriver) handleCollisionDetected(data []uint8) {
 			return
 		}
 	}
-	gobot.Publish(s.Event("collision"), data)
+	log.Printf("handleCollisionDetected failed to parse %v\n", data)
+	//gobot.Publish(s.Event("collision"), data)
 }
+
+func (s *SpheroDriver) handleLocator(data []uint8) {
+	// 22 = 5 byte async header + 16 bytes of data + 1 byte checksum
+	checksum := data[len(data)-1]
+	if checksum == calculateChecksum(data[2:len(data)-1]) {
+		// SOP+SOP+ID+DLEN+DLEN
+		buffer := bytes.NewBuffer(data[5:])		
+		var locator Locator
+		binary.Read(buffer, binary.BigEndian, &locator)
+		gobot.Publish(s.Event("locator"), locator)
+		return
+	} else {
+		log.Printf("handleLocator failed to parse %v\n", data)
+	}
+}
+
+
 
 func (s *SpheroDriver) getSyncResponse(packet *packet) []byte {
 	s.packetChannel <- packet
@@ -244,6 +315,16 @@ func (s *SpheroDriver) getSyncResponse(packet *packet) []byte {
 	return []byte{}
 }
 
+
+func (s *SpheroDriver) specialCraftPacket(body []uint8, sop2 byte, did byte, cid byte) *packet {
+	packet := new(packet)
+	packet.body = body
+	dlen := len(packet.body) + 1
+	packet.header = []uint8{0xFF, sop2, did, cid, s.seq, uint8(dlen)}
+	packet.checksum = s.calculateChecksum(packet)
+	return packet
+}
+
 func (s *SpheroDriver) craftPacket(body []uint8, did byte, cid byte) *packet {
 	packet := new(packet)
 	packet.body = body
@@ -252,6 +333,8 @@ func (s *SpheroDriver) craftPacket(body []uint8, did byte, cid byte) *packet {
 	packet.checksum = s.calculateChecksum(packet)
 	return packet
 }
+
+
 
 func (s *SpheroDriver) write(packet *packet) {
 	buf := append(packet.header, packet.body...)
@@ -282,8 +365,42 @@ func calculateChecksum(buf []byte) uint8 {
 	return uint8(^(calculatedChecksum % 256))
 }
 
+func arrShift(arr []uint8) {
+	for i := 0; i < len(arr)-1; i++ {
+		arr[i] = arr[i+1]
+	}
+}
+
 func (s *SpheroDriver) readHeader() []uint8 {
-	return s.readNextChunk(5)
+	// find ff ff or ff fe
+	sm := []uint8{0,0,0,0,0}
+	sm = s.readNextChunk(5)
+	waste := 0
+	// increase strictness, only a valid header will be returned
+	for (!(sm[0]==0xff && (sm[1]==0xff || (sm[1]==0xfe && sm[2] >= 0x00 && sm[2] <= 0x0a )))) {
+		arrShift(sm)
+		small := s.readNextChunk(1)
+		sm[4] = small[0]
+		waste = waste + 1
+	}
+	if (sm[2] == 0x07 && sm[4]!=0x11) {
+		log.Printf("readHeader corrupted 0x07 %v\n", sm)
+		sm[4] = 0x11
+	}
+	if waste > 0 {
+		log.Printf("readHeader wasted %v bytes\n", waste)
+	}
+	return sm
+	
+	/*
+	for (!(x==0xff && (y==0xff || (y==0xfe && z >= 0x00 && z <= 0x0a)))) {
+		x = y
+		y = z
+		small = s.readNextChunk(1)
+		z = small[0]
+	}*/
+	//up_to_len := s.readNextChunk(2)
+	//return []uint8{x,y, z,up_to_len[0], up_to_len[1]}
 }
 
 func (s *SpheroDriver) readBody(length uint8) []uint8 {
