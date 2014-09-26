@@ -133,11 +133,14 @@ func (s *SpheroDriver) Start() bool {
 	go func() {
 		for {
 			header := s.readHeader()
-			// log.Printf("header: %x\n", header)
+			/* if header[2] == 0x7 {
+				log.Printf("header: %x\n", header)
+			} */
+
 			if header != nil && len(header) != 0 {
 				body := s.readBody(header[4])
-				// log.Printf("body: %x\n", body)
 				if header[1] == 0xFE {
+					//log.Printf("body: %x\n", body)
 					async := append(header, body...)
 					s.asyncResponse = append(s.asyncResponse, async)
 				} else {
@@ -275,7 +278,8 @@ func (s *SpheroDriver) handleCollisionDetected(data []uint8) {
 			return
 		}
 	}
-	gobot.Publish(s.Event("collision"), data)
+	log.Printf("handleCollisionDetected failed to parse %v\n", data)
+	//gobot.Publish(s.Event("collision"), data)
 }
 
 func (s *SpheroDriver) handleLocator(data []uint8) {
@@ -361,8 +365,42 @@ func calculateChecksum(buf []byte) uint8 {
 	return uint8(^(calculatedChecksum % 256))
 }
 
+func arrShift(arr []uint8) {
+	for i := 0; i < len(arr)-1; i++ {
+		arr[i] = arr[i+1]
+	}
+}
+
 func (s *SpheroDriver) readHeader() []uint8 {
-	return s.readNextChunk(5)
+	// find ff ff or ff fe
+	sm := []uint8{0,0,0,0,0}
+	sm = s.readNextChunk(5)
+	waste := 0
+	// increase strictness, only a valid header will be returned
+	for (!(sm[0]==0xff && (sm[1]==0xff || (sm[1]==0xfe && sm[2] >= 0x00 && sm[2] <= 0x0a )))) {
+		arrShift(sm)
+		small := s.readNextChunk(1)
+		sm[4] = small[0]
+		waste = waste + 1
+	}
+	if (sm[2] == 0x07 && sm[4]!=0x11) {
+		log.Printf("readHeader corrupted 0x07 %v\n", sm)
+		sm[4] = 0x11
+	}
+	if waste > 0 {
+		log.Printf("readHeader wasted %v bytes\n", waste)
+	}
+	return sm
+	
+	/*
+	for (!(x==0xff && (y==0xff || (y==0xfe && z >= 0x00 && z <= 0x0a)))) {
+		x = y
+		y = z
+		small = s.readNextChunk(1)
+		z = small[0]
+	}*/
+	//up_to_len := s.readNextChunk(2)
+	//return []uint8{x,y, z,up_to_len[0], up_to_len[1]}
 }
 
 func (s *SpheroDriver) readBody(length uint8) []uint8 {
